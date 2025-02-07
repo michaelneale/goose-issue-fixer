@@ -23,4 +23,6 @@ This will keep a local copy of the project in the repo dir (--reset will clear t
 - instructions-starting.txt: what goose uses when there is no existing PR
 - instructions-iterating.txt: what goose uses when iterating on a PR that is not yet successful or has outstanding unaddressed `@goose` comments.
 
-![image](https://github.com/user-attachments/assets/aa43a9e9-986f-44f3-b635-91e6649a7d65)
+as a picture (not all implemented yet):
+![image](https://github.com/user-attachments/assets/8e5577eb-8371-423a-b5ba-a4e144f3de37)
+
