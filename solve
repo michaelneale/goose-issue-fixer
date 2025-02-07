@@ -1,11 +1,17 @@
 #!/bin/bash
+set -e
 
 # Check if issue URL is provided
 if [ $# -eq 0 ]; then
-    echo "Error: Please provide a GitHub issue URL"
+    echo "Please provide a GitHub issue URL"
     echo "Usage: $0 <github-issue-url> [--reset]"
     exit 1
 fi
+
+echo "running preflight checks..."
+goose run --text "check that gh cli is available, if not suggest to install it. 'gh auth status' to check is ready to use"
+
+
 
 ISSUE_URL="$1"
 RESET=false

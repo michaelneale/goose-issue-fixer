@@ -1,4 +1,4 @@
-This project aims to read from issues and then create and manage its own PRs, to completion.
+This project aims to read from issues and then create and manage its own PRs, to completion. Uses `goose run` heavily.
 
 # Running
 
