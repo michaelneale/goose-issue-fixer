@@ -15,6 +15,8 @@ Run the solver to completion:
 ```
 
 This will keep a local copy of the project in the repo dir (--reset will clear that out) - it works out what the project is from the issue.
+Will work on changes until happy (locally, but won't try to test) then open a PR and iterate while watching and fixing CI (currently github actions, reading logs/failures etc)
+It will also respond to reviews or comments on the PR that say `@goose` and take that into account before considering the issue resolved.
 
 # Design
 
