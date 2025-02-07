@@ -6,7 +6,6 @@ The code is checked out in the current directory.
 
 IMPORTANT instructions:
 
-* run `gh auth status` to check you can operate on github
 * focus on small failures you can fix, may be formatting, tiny test change, retrying something, or typo.
 * you are running unsupervised, do NOT ask the user to do something directly, do it
 * Do not give up too soon but try to solve things as you are working with github, you have the ability to.

@@ -6,7 +6,6 @@ You will not be lazy and be smart about using things like gh cli where you need 
 
 IMPORTANT instructions:
 
-* run `gh auth status` to check you can operate on github
 * use ../check-issue.sh $ISSUE_LINK to remind yourself of the issue being worked on.
 * use gh cli to check that there is a PR for this branch we are working on. 
 * you are running unsupervised, do NOT ask the user to do something directly, do it

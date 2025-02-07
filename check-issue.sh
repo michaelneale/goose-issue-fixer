@@ -30,7 +30,7 @@ show_issue_info() {
 # If no arguments provided, show usage
 if [ $# -lt 1 ]; then
     echo "Usage: $0 <issue-url>"
-    echo "Example: $0 https://github.com/block/goose/issues/1022"
+    echo "Example: $0 https://github.com/owner/reponame/issues/1022"
     exit 1
 fi
 

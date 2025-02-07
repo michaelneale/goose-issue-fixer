@@ -2,7 +2,6 @@ task: the github issue in the $ISSUE_LINK environment variable.
 
 IMPORTANT instructions:
 
-* run `gh auth status` to check you can operate on github
 * use ../check-issue.sh $ISSUE_LINK to gather information on the issue being worked on and plan to implement.
 * use ../pr-similarity-util/target/release/pr_similarity_search --owner 'repo owner' --repo 'repo name' --query "short summary of issue" to fetch any other relevant info to consider.
 * make a branch in git before making any changes named suitably
