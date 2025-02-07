@@ -1,0 +1,21 @@
+title:	docs: updated favicon and og img
+state:	MERGED
+author:	angiejones
+labels:	
+assignees:	
+reviewers:	acekyd (Approved)
+projects:	
+milestone:	
+number:	819
+url:	https://github.com/block/goose/pull/819
+additions:	0
+deletions:	0
+auto-merge:	disabled
+--
+
+diff --git a/documentation/static/img/favicon.ico b/documentation/static/img/favicon.ico
+index 9e2a5c4af..29e3cfdc3 100644
+Binary files a/documentation/static/img/favicon.ico and b/documentation/static/img/favicon.ico differ
+diff --git a/documentation/static/img/home-banner.png b/documentation/static/img/home-banner.png
+index fa4b6f987..c870e8f7d 100644
+Binary files a/documentation/static/img/home-banner.png and b/documentation/static/img/home-banner.png differ

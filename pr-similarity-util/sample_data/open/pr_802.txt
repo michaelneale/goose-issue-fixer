@@ -1,0 +1,15 @@
+title:	feat: Add an exit and test to configure
+state:	OPEN
+author:	baxen
+labels:	
+assignees:	
+reviewers:	
+projects:	
+milestone:	
+number:	802
+url:	https://github.com/block/goose/pull/802
+additions:	55
+deletions:	1
+auto-merge:	disabled
+--
+

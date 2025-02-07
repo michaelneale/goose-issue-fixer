@@ -1,0 +1,51 @@
+title:	feat(session): Print previous session prompts when resuming a session
+state:	OPEN
+author:	atishpatel
+labels:	
+assignees:	
+reviewers:	
+projects:	
+milestone:	
+number:	634
+url:	https://github.com/block/goose/pull/634
+additions:	16
+deletions:	2
+auto-merge:	disabled
+--
+Sometimes i want to rerun a previous prompt with goose when the underlying data has changed. This change will print the previous prompts when resuming a session to help remind me of the context and help me copy paste older prompts that were effective.
+
+Also fixed help output since `--session` flag doesn't exists. It's suppose to be the `--name` flag.
+
+Resumed session
+```
+❯ ./target/debug/goose session -r --name t7alxs5d
+resuming session | provider: databricks model: claude-3-5-sonnet-2
+    logging to /Users/atish/.config/goose/sessions/t7alxs5d.jsonl
+
+Previous prompts for resuming session:
+> find all the csv files in the ./tmp directory. 
+> Use the data in the csv files to create a new csv file that shows total number of empty nodes per dc compared to the total number of nodes
+
+
+Goose is running! Enter your instructions, or try asking what goose can do.
+
+
+( O)>
+Closing session. Recorded to /Users/atish/.config/goose/sessions/t7alxs5d.jsonl
+
+Child process ended (EOF on stdout)
+```
+
+New sessions
+```
+❯ ./target/debug/goose session
+starting session | provider: databricks model: claude-3-5-sonnet-2
+    logging to /Users/atish/.config/goose/sessions/aswuff9b.jsonl
+
+
+Goose is running! Enter your instructions, or try asking what goose can do.
+
+
+( O)>
+```
+

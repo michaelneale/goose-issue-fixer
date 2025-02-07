@@ -1,0 +1,44 @@
+title:	feat: support googledrive as mcp server name
+state:	MERGED
+author:	kalvinnchau
+labels:	
+assignees:	
+reviewers:	baxen (Approved)
+projects:	
+milestone:	
+number:	814
+url:	https://github.com/block/goose/pull/814
+additions:	2
+deletions:	2
+auto-merge:	disabled
+--
+# support using `googledrive` as mcp server name
+
+* also leave in support for `google_drive` for backward compatibility
+* allow both `goose-cli` and `goose-server` to use both names
+diff --git a/crates/goose-cli/src/commands/mcp.rs b/crates/goose-cli/src/commands/mcp.rs
+index 0be73665f..12748112d 100644
+--- a/crates/goose-cli/src/commands/mcp.rs
++++ b/crates/goose-cli/src/commands/mcp.rs
+@@ -16,7 +16,7 @@ pub async fn run_server(name: &str) -> Result<()> {
+         "developer" => Some(Box::new(RouterService(DeveloperRouter::new()))),
+         "computercontroller" => Some(Box::new(RouterService(ComputerControllerRouter::new()))),
+         "jetbrains" => Some(Box::new(RouterService(JetBrainsRouter::new()))),
+-        "google_drive" => {
++        "google_drive" | "googledrive" => {
+             let router = GoogleDriveRouter::new().await;
+             Some(Box::new(RouterService(router)))
+         }
+diff --git a/crates/goose-server/src/commands/mcp.rs b/crates/goose-server/src/commands/mcp.rs
+index 6b3de373d..773c1f38a 100644
+--- a/crates/goose-server/src/commands/mcp.rs
++++ b/crates/goose-server/src/commands/mcp.rs
+@@ -15,7 +15,7 @@ pub async fn run(name: &str) -> Result<()> {
+         "developer" => Some(Box::new(RouterService(DeveloperRouter::new()))),
+         "computercontroller" => Some(Box::new(RouterService(ComputerControllerRouter::new()))),
+         "jetbrains" => Some(Box::new(RouterService(JetBrainsRouter::new()))),
+-        "google_drive" => {
++        "google_drive" | "googledrive" => {
+             let router = GoogleDriveRouter::new().await;
+             Some(Box::new(RouterService(router)))
+         }

@@ -1,0 +1,121 @@
+title:	styles: fixed cash sans
+state:	MERGED
+author:	nahiyankhan
+labels:	
+assignees:	
+reviewers:	baxen (Approved)
+projects:	
+milestone:	
+number:	825
+url:	https://github.com/block/goose/pull/825
+additions:	7
+deletions:	34
+auto-merge:	disabled
+--
+Realized the tailwind config for the fontFamily slipped. Likely in between my changes and rebases. 🙏🏽 
+
+<img width="862" alt="Screenshot 2025-01-27 at 7 09 34 PM" src="https://github.com/user-attachments/assets/8120270a-2411-4955-826b-b2a64fe31ecd" />
+
+diff --git a/ui/desktop/src/components/GooseResponseForm.tsx b/ui/desktop/src/components/GooseResponseForm.tsx
+index 3f576d61b..69ff86b1e 100644
+--- a/ui/desktop/src/components/GooseResponseForm.tsx
++++ b/ui/desktop/src/components/GooseResponseForm.tsx
+@@ -197,7 +197,7 @@ export default function GooseResponseForm({
+           onSubmit={handleFormSubmit}
+           className="space-y-4 p-4 rounded-lg bg-tool-card dark:bg-tool-card-dark border dark:border-dark-border"
+         >
+-          <h2 className="text-xl font-bold mb-2 dark:text-gray-100">{dynamicForm.title}</h2>
++          <h2 className="text-xl font-medium mb-2 dark:text-gray-100">{dynamicForm.title}</h2>
+           <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">{dynamicForm.description}</p>
+ 
+           {dynamicForm.fields.map((field) => (
+diff --git a/ui/desktop/src/components/welcome_screen/WelcomeScreen.tsx b/ui/desktop/src/components/welcome_screen/WelcomeScreen.tsx
+index 85005f4a4..6d71684ae 100644
+--- a/ui/desktop/src/components/welcome_screen/WelcomeScreen.tsx
++++ b/ui/desktop/src/components/welcome_screen/WelcomeScreen.tsx
+@@ -38,7 +38,7 @@ export function WelcomeScreen({ onSubmit }: WelcomeScreenProps) {
+                   <WelcomeGooseLogo className="h-16 w-16 md:h-20 md:w-20 text-black dark:text-white" />
+                 </div>
+                 <div>
+-                  <h1 className="text-4xl font-bold text-textStandard tracking-tight md:text-5xl">
++                  <h1 className="text-4xl font-medium text-textStandard tracking-tight md:text-5xl">
+                     Welcome to goose
+                   </h1>
+                   <p className="text-lg text-textSubtle max-w-2xl">
+@@ -50,7 +50,7 @@ export function WelcomeScreen({ onSubmit }: WelcomeScreenProps) {
+ 
+             {/* ProviderGrid */}
+             <div className="w-full">
+-              <h2 className="text-3xl font-bold text-textStandard tracking-tight mb-2">
++              <h2 className="text-3xl font-medium text-textStandard tracking-tight mb-2">
+                 Choose a Provider
+               </h2>
+               <p className="text-xl text-textStandard mb-4">
+@@ -70,7 +70,7 @@ export function WelcomeScreen({ onSubmit }: WelcomeScreenProps) {
+                 Not sure where to start?{' '}
+                 <Button
+                   variant="link"
+-                  className="text-indigo-500 hover:text-indigo-600 p-0 h-auto"
++                  className="text-blue-500 hover:text-blue-600 p-0 h-auto"
+                   onClick={() =>
+                     window.open('https://block.github.io/goose/v1/docs/quickstart', '_blank')
+                   }
+diff --git a/ui/desktop/src/styles/main.css b/ui/desktop/src/styles/main.css
+index 2c263326e..ed69d4e20 100644
+--- a/ui/desktop/src/styles/main.css
++++ b/ui/desktop/src/styles/main.css
+@@ -4,34 +4,6 @@
+ 
+ /* Cash Sans */
+ 
+-/* @font-face {
+-  font-family: 'CashSans';
+-  src: url('./fonts/CashSans-Regular.woff2') format('woff2');
+-  font-weight: normal;
+-  font-style: normal;
+-}
+-
+-@font-face {
+-  font-family: 'CashSans';
+-  src: url('./fonts/CashSans-Bold.woff2') format('woff2');
+-  font-weight: bold;
+-  font-style: normal;
+-}
+-
+-@font-face {
+-  font-family: 'CashSans';
+-  src: url('./fonts/CashSansMono-Light.woff2') format('woff2');
+-  font-weight: lighter;
+-  font-style: normal;
+-}
+-
+-@font-face {
+-  font-family: 'CashSans';
+-  src: url('./fonts/CashSansMono-Regular.woff2') format('woff2');
+-  font-weight: normal;
+-  font-style: normal;
+-} */
+-
+ @font-face {
+   font-family: Cash Sans;
+   src: url(https://cash-f.squarecdn.com/static/fonts/cashsans/woff2/CashSans-Regular.woff2)
+diff --git a/ui/desktop/tailwind.config.ts b/ui/desktop/tailwind.config.ts
+index a3d1ec020..4034bcfaf 100644
+--- a/ui/desktop/tailwind.config.ts
++++ b/ui/desktop/tailwind.config.ts
+@@ -1,5 +1,3 @@
+-import { transform } from 'framer-motion';
+-
+ /** @type {import('tailwindcss').Config} */
+ export default {
+   darkMode: ['class'],
+@@ -7,6 +5,9 @@ export default {
+   plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography')],
+   theme: {
+     extend: {
++      fontFamily: {
++        sans: ['Cash Sans'],
++      },
+       keyframes: {
+         shimmer: {
+           '0%': { backgroundPosition: '200% 0' },

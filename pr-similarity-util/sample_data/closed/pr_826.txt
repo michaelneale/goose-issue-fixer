@@ -1,0 +1,54 @@
+title:	fix: Temporarily disable link previews as layout is borked
+state:	MERGED
+author:	alexhancock
+labels:	
+assignees:	
+reviewers:	baxen (Approved)
+projects:	
+milestone:	
+number:	826
+url:	https://github.com/block/goose/pull/826
+additions:	5
+deletions:	2
+auto-merge:	disabled
+--
+Temporarily disabling link previews due to a layout issue. Will fix and re-enable soon after launch.
+
+Before:
+
+<img width="1150" alt="Screenshot 2025-01-27 at 20 25 03" src="https://github.com/user-attachments/assets/057d571e-5db8-4c3b-b911-854529bbef53" />
+
+After:
+
+<img width="1089" alt="Screenshot 2025-01-27 at 20 27 42" src="https://github.com/user-attachments/assets/46672275-2177-4098-8e81-742428055d32" />
+
+
+diff --git a/ui/desktop/src/components/GooseMessage.tsx b/ui/desktop/src/components/GooseMessage.tsx
+index e44a0e658..a19af957c 100644
+--- a/ui/desktop/src/components/GooseMessage.tsx
++++ b/ui/desktop/src/components/GooseMessage.tsx
+@@ -40,7 +40,8 @@ export default function GooseMessage({ message, metadata, messages, append }: Go
+         )}
+       </div>
+ 
+-      {urls.length > 0 && (
++      {/* TODO(alexhancock): Re-enable link previews once styled well again */}
++      {false && urls.length > 0 && (
+         <div className="flex flex-wrap mt-[16px]">
+           {urls.map((url, index) => (
+             <LinkPreview key={index} url={url} />
+diff --git a/ui/desktop/src/components/UserMessage.tsx b/ui/desktop/src/components/UserMessage.tsx
+index cbd7892b3..a37a8e92d 100644
+--- a/ui/desktop/src/components/UserMessage.tsx
++++ b/ui/desktop/src/components/UserMessage.tsx
+@@ -13,7 +13,9 @@ export default function UserMessage({ message }) {
+         <div className="flex bg-slate text-white rounded-xl rounded-br-none py-2 px-3">
+           <MarkdownContent content={message.content} className="text-white" />
+         </div>
+-        {urls.length > 0 && (
++
++        {/* TODO(alexhancock): Re-enable link previews once styled well again */}
++        {false && urls.length > 0 && (
+           <div className="flex flex-wrap mt-2">
+             {urls.map((url, index) => (
+               <LinkPreview key={index} url={url} />

@@ -1,0 +1,15 @@
+title:	feat: retarget the readme for v1
+state:	OPEN
+author:	baxen
+labels:	
+assignees:	
+reviewers:	
+projects:	
+milestone:	
+number:	827
+url:	https://github.com/block/goose/pull/827
+additions:	3
+deletions:	2
+auto-merge:	disabled
+--
+

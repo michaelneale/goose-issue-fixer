@@ -1,0 +1,15 @@
+title:	trigger CI build
+state:	OPEN
+author:	baxen
+labels:	
+assignees:	
+reviewers:	
+projects:	
+milestone:	
+number:	613
+url:	https://github.com/block/goose/pull/613
+additions:	0
+deletions:	0
+auto-merge:	disabled
+--
+

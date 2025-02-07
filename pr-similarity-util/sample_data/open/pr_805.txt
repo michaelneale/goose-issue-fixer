@@ -1,0 +1,17 @@
+title:	fix: Switch electron.send to named method via preload.js
+state:	OPEN
+author:	alexhancock
+labels:	
+assignees:	
+reviewers:	michaelneale (Approved), baxen (Requested)
+projects:	
+milestone:	
+number:	805
+url:	https://github.com/block/goose/pull/805
+additions:	2
+deletions:	1
+auto-merge:	disabled
+--
+This should make this IPC message available to the frontend
+
+NOTE: We have a very messy situation with TS typings for the `preload.js` module right now. I will mitigate in the days ahead.

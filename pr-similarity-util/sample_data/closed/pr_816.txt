@@ -1,0 +1,15 @@
+title:	Architecture guide
+state:	CLOSED
+author:	EbonyLouis
+labels:	
+assignees:	
+reviewers:	
+projects:	
+milestone:	
+number:	816
+url:	https://github.com/block/goose/pull/816
+additions:	68699
+deletions:	19127
+auto-merge:	disabled
+--
+

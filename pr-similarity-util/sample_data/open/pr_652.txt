@@ -1,0 +1,23 @@
+title:	[ui][v1] added dropdown icon to directory text to match figma (small)
+state:	OPEN
+author:	tiensi
+labels:	
+assignees:	
+reviewers:	michaelneale (Requested)
+projects:	
+milestone:	
+number:	652
+url:	https://github.com/block/goose/pull/652
+additions:	2
+deletions:	1
+auto-merge:	disabled
+--
+**Summary**
+Updated the directory display text to match figma designs [^1]
+
+| Before | After |
+| --- | --- |
+| ![Before](https://github.com/user-attachments/assets/0e6577d5-2a89-425c-821a-9917af74a15d) | ![After](https://github.com/user-attachments/assets/20dc24c5-1aa3-4116-953c-b281876fcd8e)
+
+[^1]: First time contributing to open source in a while, please feel free to provide any feedback.
+

@@ -1,0 +1,84 @@
+title:	feat: add quick_test input in bundle-desktop workflow
+state:	MERGED
+author:	salman1993
+labels:	
+assignees:	
+reviewers:	kalvinnchau (Approved), michaelneale (Requested)
+projects:	
+milestone:	
+number:	808
+url:	https://github.com/block/goose/pull/808
+additions:	11
+deletions:	3
+auto-merge:	disabled
+--
+adds `quick_test` input, which isn't used anywhere in this repo but can be useful to reuse this in internal release pipelines
+diff --git a/.github/workflows/bundle-desktop.yml b/.github/workflows/bundle-desktop.yml
+index 87152d947..4dc63cb1a 100644
+--- a/.github/workflows/bundle-desktop.yml
++++ b/.github/workflows/bundle-desktop.yml
+@@ -11,6 +11,11 @@ on:
+         required: false
+         default: false
+         type: boolean
++      quick_test:
++        description: 'Whether to perform the quick launch test'
++        required: false
++        default: true
++        type: boolean
+     secrets:
+       CERTIFICATE_OSX_APPLICATION:
+         description: 'Certificate for macOS application signing'
+@@ -162,6 +167,7 @@ jobs:
+           path: ui/desktop/out/Goose-darwin-arm64/Goose.zip
+ 
+       - name: Quick launch test (macOS)
++        if: ${{ inputs.quick_test }}
+         run: |
+           # Ensure no quarantine attributes (if needed)
+           xattr -cr "ui/desktop/out/Goose-darwin-arm64/Goose.app"
+diff --git a/.github/workflows/canary.yml b/.github/workflows/canary.yml
+index 9ce651b36..e796eee1e 100644
+--- a/.github/workflows/canary.yml
++++ b/.github/workflows/canary.yml
+@@ -5,7 +5,7 @@
+ on:
+   push:
+     paths-ignore:
+-      - 'docs/**'
++      - 'documentation/**'
+     branches:
+       - main
+ 
+diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml
+index 8411f17c9..6ad028282 100644
+--- a/.github/workflows/ci.yml
++++ b/.github/workflows/ci.yml
+@@ -1,12 +1,12 @@
+ on:
+   push:
+     paths-ignore:
+-      - 'docs/**'
++      - 'documentation/**'
+     branches:
+       - main
+   pull_request:
+     paths-ignore:
+-      - 'docs/**'
++      - 'documentation/**'
+     branches:
+       - main
+   workflow_dispatch:
+diff --git a/.github/workflows/release.yml b/.github/workflows/release.yml
+index d8ecb2750..d91bf096f 100644
+--- a/.github/workflows/release.yml
++++ b/.github/workflows/release.yml
+@@ -1,6 +1,8 @@
+ # This workflow is main release, needs to be manually tagged & pushed.
+ on:
+   push:
++    paths-ignore:
++      - 'documentation/**'
+     tags:
+       - "v1.*"
+ 

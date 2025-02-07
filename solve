@@ -1,0 +1,78 @@
+#!/bin/bash
+
+# Check if issue URL is provided
+if [ $# -eq 0 ]; then
+    echo "Error: Please provide a GitHub issue URL"
+    echo "Usage: $0 <github-issue-url> [--reset]"
+    exit 1
+fi
+
+ISSUE_URL="$1"
+RESET=false
+
+# Check for reset flag
+if [ "$2" = "--reset" ]; then
+    RESET=true
+fi
+
+# Extract repo info from GitHub issue URL
+# Expected format: https://github.com/owner/repo/issues/number
+REPO_URL=$(echo $ISSUE_URL | sed -E 's|https://github.com/([^/]+/[^/]+)/issues/.*|\1|')
+
+# Handle repo directory
+if [ "$RESET" = true ] && [ -d "repo" ]; then
+    echo "Resetting repo directory..."
+    rm -rf repo
+fi
+
+if [ ! -d "repo" ]; then
+    echo "Creating and initializing repo directory..."
+    mkdir repo
+    cd repo
+    git clone "https://github.com/${REPO_URL}.git" .
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to clone repository"
+        cd ..
+        rm -rf repo
+        exit 1
+    fi
+    cd ..
+elif [ -z "$(ls -A repo)" ]; then
+    echo "Repo directory is empty, cloning repository..."
+    cd repo
+    git clone "https://github.com/${REPO_URL}.git" .
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to clone repository"
+        cd ..
+        rm -rf repo
+        exit 1
+    fi
+    cd ..
+fi
+
+# Navigate to repo directory
+cd repo
+
+# Export issue URL as environment variable
+export ISSUE_LINK="$ISSUE_URL"
+
+# Check if we're on main branch and have no unstaged changes
+CURRENT_BRANCH=$(git branch --show-current)
+UNSTAGED_CHANGES=$(git status --porcelain)
+
+# Choose instruction file based on conditions
+if [ "$CURRENT_BRANCH" = "main" ] && [ -z "$UNSTAGED_CHANGES" ]; then    
+    echo "Starting a brand new task!"
+    goose run -i "../instructions-starting.txt"
+    echo "Now will try to finish it to completion"
+fi    
+
+# Keep running the iterating instructions until FINISHED file exists
+while [ ! -f "../FINISHED" ]; do
+    echo "Working the task..."
+    goose run -i "../instructions-iterating.txt"
+    # Add a small delay to prevent too rapid iterations
+    sleep 1
+done
+
+echo "FINISHED file found, exiting..."

@@ -1,0 +1,25 @@
+title:	feat: selective render
+state:	OPEN
+author:	laanak08
+labels:	
+assignees:	
+reviewers:	ahau-square (Requested), baxen (Requested), yingjiehe-xyz (Requested)
+projects:	
+milestone:	
+number:	630
+url:	https://github.com/block/goose/pull/630
+additions:	41
+deletions:	30
+auto-merge:	disabled
+--
+This change allows "Goose" (not user, not assistant) to show information to the user which is outside of the user's conversation with the llm, and avoids sending those out-of-band messages to the llm.
+
+ideally, visually, it would be nice to update the prompt so Goose-messages show as a third speaker.
+
+changelist:
+* add role Goose
+* after truncation, create message to user from Role::Goose and append to the message history
+* filter out these Goose-messages before sending to llm-preprocessing
+* after llm response, render llm response, then render any goose response if one exists
+
+this keeps the Goose messages in the message history.

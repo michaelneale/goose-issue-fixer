@@ -1,0 +1,15 @@
+title:	feat: providers filter goose messages
+state:	OPEN
+author:	laanak08
+labels:	
+assignees:	
+reviewers:	ahau-square (Requested), baxen (Requested), michaelneale (Requested), salman1993 (Requested), yingjiehe-xyz (Requested)
+projects:	
+milestone:	
+number:	637
+url:	https://github.com/block/goose/pull/637
+additions:	47
+deletions:	31
+auto-merge:	disabled
+--
+Assuming messages sent to provider-specific pre-processing contain a mixture of messages from Role::Goose, and the other expected roles, update provider-code to ignore Role::Goose messages when converting from Message -> Provider-Specific-Spec

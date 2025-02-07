@@ -1,0 +1,41 @@
+title:	styles: lightened dark mode borders
+state:	MERGED
+author:	nahiyankhan
+labels:	
+assignees:	
+reviewers:	baxen (Approved)
+projects:	
+milestone:	
+number:	822
+url:	https://github.com/block/goose/pull/822
+additions:	2
+deletions:	2
+auto-merge:	disabled
+--
+
+diff --git a/ui/desktop/src/components/GooseMessage.tsx b/ui/desktop/src/components/GooseMessage.tsx
+index 5195b48e9..e44a0e658 100644
+--- a/ui/desktop/src/components/GooseMessage.tsx
++++ b/ui/desktop/src/components/GooseMessage.tsx
+@@ -34,7 +34,7 @@ export default function GooseMessage({ message, metadata, messages, append }: Go
+         )}
+ 
+         {message.toolInvocations && (
+-          <div className="goose-message-tool bg-bgApp border border-borderSubtle rounded-b-2xl px-4 pt-4 pb-2 mt-1">
++          <div className="goose-message-tool bg-bgApp border border-borderSubtle dark:border-gray-700 rounded-b-2xl px-4 pt-4 pb-2 mt-1">
+             <ToolInvocations toolInvocations={message.toolInvocations} />
+           </div>
+         )}
+diff --git a/ui/desktop/src/components/ToolInvocations.tsx b/ui/desktop/src/components/ToolInvocations.tsx
+index 6498349d8..a0221baf3 100644
+--- a/ui/desktop/src/components/ToolInvocations.tsx
++++ b/ui/desktop/src/components/ToolInvocations.tsx
+@@ -53,7 +53,7 @@ function ToolCall({ call }: ToolCallProps) {
+ 
+       {call.args && <ToolCallArguments args={call.args} />}
+ 
+-      <div className="self-stretch h-px my-[10px] -mx-4 bg-borderSubtle" />
++      <div className="self-stretch h-px my-[10px] -mx-4 bg-borderSubtle dark:bg-gray-700" />
+     </div>
+   );
+ }

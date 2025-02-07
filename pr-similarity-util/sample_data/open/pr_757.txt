@@ -1,0 +1,55 @@
+title:	goose freedom level
+state:	DRAFT
+author:	Kvadratni
+labels:	
+assignees:	
+reviewers:	
+projects:	
+milestone:	
+number:	757
+url:	https://github.com/block/goose/pull/757
+additions:	1084
+deletions:	63
+auto-merge:	disabled
+--
+I mentioned this as a joke, but I think this is a useful feature. 
+
+**Update**
+Changed the concept of the cage mode to actually something security useful. 
+
+
+1. Caged Mode (Most Restrictive)
+   - No extensions can be enabled or added
+   - No tools can be used
+   - All extension-related UI actions are disabled
+   - Default startup mode for maximum security
+
+2. Cage Free Mode
+   - Only built-in extensions can be enabled
+   - Only built-in tools are allowed (developer__, computercontroller__, 
+     memory__, jetbrains__, platform__)
+   - Cannot browse extension site or add manual extensions
+   - Suitable for using core functionality without external components
+
+3. Free Range Mode
+   - Can enable built-in extensions
+   - Can browse and install extensions from the official site
+   - Cannot manually add custom extensions
+   - All tools are allowed
+   - Good balance of functionality and security
+
+4. Wild Mode (Least Restrictive)
+   - Full access to all extensions and tools
+   - Can manually add custom extensions
+   - Can browse and install from extension site
+   - No restrictions on extension sources
+   - Suitable for development and testing
+
+## sound on 
+
+
+https://github.com/user-attachments/assets/3fdeb890-4df6-47dd-8d17-3d59a7c190c6
+
+
+
+

@@ -1,0 +1,15 @@
+title:	feat: set npm registry option
+state:	OPEN
+author:	michaelneale
+labels:	
+assignees:	
+reviewers:	
+projects:	
+milestone:	
+number:	606
+url:	https://github.com/block/goose/pull/606
+additions:	33
+deletions:	2
+auto-merge:	disabled
+--
+this may be in vain but trying to setup a way to let people run NPX with specified index/repository

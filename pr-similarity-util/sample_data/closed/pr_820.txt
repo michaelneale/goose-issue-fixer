@@ -1,0 +1,188 @@
+title:	Address Documentation Feedback and Add Reusable Components
+state:	MERGED
+author:	EbonyLouis
+labels:	
+assignees:	
+reviewers:	angiejones (Approved)
+projects:	
+milestone:	
+number:	820
+url:	https://github.com/block/goose/pull/820
+additions:	65
+deletions:	15
+auto-merge:	disabled
+--
+This PR addresses documentation feedback by improving clarity, enhancing usability, and reducing duplication with reusable components. Key updates include:
+
+1. **Reusable Components:**
+   - Added `SupportedEnvironments.js`:
+     - Displays information about supported platforms and architectures.
+   - Added `RateLimits.js`:
+     - Provides guidance on billing, free-tier options, and rate limit management.
+
+2. **Documentation Updates:**
+   - Replaced inline admonitions with reusable components (`SupportedEnvironments` and `RateLimits`) in:
+     - `installation.md`
+     - `managing-goose-sessions.md`
+     - `quickstart.md`
+   - Updated session management instructions:
+     - Added guidance for starting new sessions in the Goose UI.
+     - Added a tip recommending new sessions for distinct use cases to maintain organized workflows.
+
+---
+- To see the specific tasks where the Asana app for GitHub is being used, see below:
+  - https://app.asana.com/0/0/1209252638364016
+  - https://app.asana.com/0/0/1209252638364014
+diff --git a/documentation/docs/getting-started/installation.md b/documentation/docs/getting-started/installation.md
+index 2f76af215..424d11053 100644
+--- a/documentation/docs/getting-started/installation.md
++++ b/documentation/docs/getting-started/installation.md
+@@ -5,13 +5,13 @@ import Tabs from '@theme/Tabs';
+ import TabItem from '@theme/TabItem';
+ import Link from "@docusaurus/Link";
+ import { IconDownload } from "@site/src/components/icons/download";
++import SupportedEnvironments from '@site/src/components/SupportedEnvironments';
++import RateLimits from '@site/src/components/RateLimits';
+ 
+ 
+ # Install Goose
+ 
+-:::info Supported Environments
+-Goose currently works on **macOS** and **Linux** systems and supports both **ARM** and **x86** architectures. If you'd like to request support for additional operating systems, please [open an issue on GitHub](https://github.com/block/goose/issues/new?template=Blank+issue).
+-:::
++<SupportedEnvironments />
+ 
+ 
+ <Tabs groupId="interface">
+@@ -130,9 +130,7 @@ Goose works with a set of [supported LLM providers][providers], and you’ll nee
+   </TabItem>
+ </Tabs>
+ 
+-:::info Billing
+-You will need to have credits in your LLM Provider account (when necessary) to be able to successfully make requests. Some providers also have rate limits on API usage, which can affect your experience. Check out the [Handling Rate Limits][handling-rate-limits] guide to learn how to efficiently manage these limits while using Goose.
+-:::
++<RateLimits />
+ 
+ ## Running Goose
+ 
+diff --git a/documentation/docs/guides/managing-goose-sessions.md b/documentation/docs/guides/managing-goose-sessions.md
+index 3375e4539..08bd44f35 100644
+--- a/documentation/docs/guides/managing-goose-sessions.md
++++ b/documentation/docs/guides/managing-goose-sessions.md
+@@ -24,6 +24,10 @@ A session is a single, continuous interaction between you and Goose, providing a
+         
+         Type your questions, tasks, or instructions directly into the input field, and Goose will immediately get to work. 
+ 
++        ### Start New Session
++
++        To start a new session in the Goose desktop application, click the three dots in the top-right corner of the application and select **New Session** from the dropdown menu.
++
+     </TabItem>
+ </Tabs>
+ 
+@@ -95,6 +99,10 @@ A session is a single, continuous interaction between you and Goose, providing a
+         ```
+         goose session -r -n react-migration
+         ```
++        :::tip
++        While you can resume sessions using the commands above, we recommend creating new sessions for new tasks to reduce the chance of [doom spiraling](/docs/troubleshooting#stuck-in-a-loop-or-unresponsive).
++        :::
++
+     </TabItem>
+     <TabItem value="ui" label="Goose Desktop">
+         Session management features, such as **naming** and **resuming** sessions, are **not** currently available in the Goose Desktop. If you'd like to see these features added, please [open an issue on GitHub](https://github.com/block/goose/issues/new?template=Blank+issue).
+diff --git a/documentation/docs/quickstart.md b/documentation/docs/quickstart.md
+index ca7b14c9d..443646f90 100644
+--- a/documentation/docs/quickstart.md
++++ b/documentation/docs/quickstart.md
+@@ -6,13 +6,13 @@ import Tabs from '@theme/Tabs';
+ import TabItem from '@theme/TabItem';
+ import Link from "@docusaurus/Link";
+ import { IconDownload } from "@site/src/components/icons/download";
+-
++import SupportedEnvironments from '@site/src/components/SupportedEnvironments';
++import RateLimits from '@site/src/components/RateLimits';
+ 
+ # Goose in 5 minutes
+ 
+-:::info Supported Environments
+-Goose currently works on **macOS** and **Linux** systems and supports both **ARM** and **x86** architectures. If you'd like to request support for additional operating systems, please [open an issue on GitHub](https://github.com/block/goose/issues/new?template=Blank+issue).
+-:::
++<SupportedEnvironments />
++
+ 
+ Goose is an open source AI agent that supercharges your software development by automating coding tasks. This quick tutorial will guide you through getting started with Goose!
+ 
+@@ -80,11 +80,7 @@ Goose works with [supported LLM providers][providers]. When you install Goose, y
+   </TabItem>
+ </Tabs>
+ 
+-:::info Billing
+- [Google Gemini](https://aistudio.google.com/app/apikey) offers a free tier you can get started with. Otherwise, you'll need to ensure that you have credits available in your LLM Provider account to successfully make requests. 
+- 
+- Some providers also have rate limits on API usage, which can affect your experience. Check out our [Handling Rate Limits][handling-rate-limits] guide to learn how to efficiently manage these limits while using Goose.
+-:::
++<RateLimits />
+ 
+ ## Start Session
+ Sessions are single, continuous conversations between you and Goose. Let's start one.
+diff --git a/documentation/src/components/RateLimits.js b/documentation/src/components/RateLimits.js
+new file mode 100644
+index 000000000..eea453b59
+--- /dev/null
++++ b/documentation/src/components/RateLimits.js
+@@ -0,0 +1,29 @@
++import React from "react";
++import Admonition from "@theme/Admonition";
++
++const RateLimits = () => {
++  return (
++    <Admonition type="info" title="Billing">
++      <a
++        href="https://aistudio.google.com/app/apikey"
++        target="_blank"
++        rel="noopener noreferrer"
++      >
++        Google Gemini
++      </a>{" "}
++      offers a free tier you can get started with. Otherwise, you'll need to
++      ensure that you have credits available in your LLM Provider account to
++      successfully make requests.
++      <br />
++      <br />
++      Some providers also have rate limits on API usage, which can affect your
++      experience. Check out our{" "}
++      <a href="/docs/guides/handling-llm-rate-limits" target="_blank">
++        Handling Rate Limits
++      </a>{" "}
++      guide to learn how to efficiently manage these limits while using Goose.
++    </Admonition>
++  );
++};
++
++export default RateLimits;
+diff --git a/documentation/src/components/SupportedEnvironments.js b/documentation/src/components/SupportedEnvironments.js
+new file mode 100644
+index 000000000..bba269c01
+--- /dev/null
++++ b/documentation/src/components/SupportedEnvironments.js
+@@ -0,0 +1,19 @@
++import React from "react";
++import Admonition from "@theme/Admonition";
++
++const SupportedEnvironments = () => {
++  return (
++    <Admonition type="info" title="Supported Environments">
++      Goose currently works on <strong>macOS</strong> and <strong>Linux</strong> systems and supports both <strong>ARM</strong> and <strong>x86</strong> architectures. If you'd like to request support for additional operating systems, please{" "}
++      <a
++        href="https://github.com/block/goose/issues/new?template=Blank+issue"
++        target="_blank"
++        rel="noopener noreferrer"
++      >
++        open an issue on GitHub
++      </a>.
++    </Admonition>
++  );
++};
++
++export default SupportedEnvironments;

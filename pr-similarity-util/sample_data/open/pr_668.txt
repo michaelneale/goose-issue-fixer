@@ -1,0 +1,15 @@
+title:	feat: port over MCP prompts to developer system
+state:	OPEN
+author:	salman1993
+labels:	
+assignees:	
+reviewers:	baxen (Approved), wendytang (Approved), ahau-square (Requested)
+projects:	
+milestone:	
+number:	668
+url:	https://github.com/block/goose/pull/668
+additions:	118
+deletions:	5
+auto-merge:	disabled
+--
+we missed [these prompt methods](https://github.com/block/goose/blob/23987f7c892e31b10445488149dcc47680f20c45/crates/goose-mcp/src/developer/mod.rs#L846-L887) (used to be in developer1) during the [cleanup](https://github.com/block/goose/pull/663). will make a PR to add them to current developer (no rush since we don't currently support them)

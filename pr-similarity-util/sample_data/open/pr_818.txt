@@ -1,0 +1,34 @@
+title:	architecture guide
+state:	OPEN
+author:	EbonyLouis
+labels:	
+assignees:	
+reviewers:	angiejones (Approved), acekyd (Requested), baxen (Requested)
+projects:	
+milestone:	
+number:	818
+url:	https://github.com/block/goose/pull/818
+additions:	70
+deletions:	1
+auto-merge:	disabled
+--
+This PR introduces the **Goose Architecture Guide**, which provides a comprehensive overview of Goose's core components, interoperability with extensions, the interactive loop, error handling, and token management. The following updates are included:
+
+1. Added a new guide: `goose-architecture.md`  
+   - Covers the architecture of Goose, including:
+     - Core components: interface, agent, and extensions.
+     - Integration with extensions using MCP.
+     - The interactive loop and how Goose processes user requests.
+     - Error handling and token management optimizations.
+   - Includes a diagram illustrating the interactive loop.
+
+2. Updated the `extensions-design.md`:
+   - Adjusted the sidebar position for improved navigation.
+
+3. Added an image asset:
+   - `interactive-loop.png` under `docs/assets/guides/`.
+
+
+---
+- To see the specific tasks where the Asana app for GitHub is being used, see below:
+  - https://app.asana.com/0/0/1208894943389680

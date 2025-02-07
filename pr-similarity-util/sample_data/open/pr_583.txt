@@ -1,0 +1,15 @@
+title:	switch to a file based lock
+state:	OPEN
+author:	baxen
+labels:	
+assignees:	
+reviewers:	
+projects:	
+milestone:	
+number:	583
+url:	https://github.com/block/goose/pull/583
+additions:	47
+deletions:	10
+auto-merge:	disabled
+--
+

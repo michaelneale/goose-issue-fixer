@@ -1,0 +1,15 @@
+title:	commit for posterity
+state:	OPEN
+author:	laanak08
+labels:	
+assignees:	
+reviewers:	
+projects:	
+milestone:	
+number:	738
+url:	https://github.com/block/goose/pull/738
+additions:	432
+deletions:	81
+auto-merge:	disabled
+--
+adding for posterity. do not merge.

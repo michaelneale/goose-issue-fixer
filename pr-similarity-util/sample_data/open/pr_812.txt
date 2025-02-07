@@ -1,0 +1,17 @@
+title:	styles: tweaks to tool call UI [not launch blocking]
+state:	OPEN
+author:	nahiyankhan
+labels:	
+assignees:	
+reviewers:	
+projects:	
+milestone:	
+number:	812
+url:	https://github.com/block/goose/pull/812
+additions:	34
+deletions:	23
+auto-merge:	disabled
+--
+Tightened the spacing and styles around the Tool Call UI.
+
+Will drop a screenshot here. 

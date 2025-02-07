@@ -1,0 +1,20 @@
+title:	[feat] MCP prompts
+state:	OPEN
+author:	ahau-square
+labels:	
+assignees:	
+reviewers:	baxen (Approved), wendytang (Commented), kalvinnchau (Requested), salman1993 (Requested)
+projects:	
+milestone:	
+number:	639
+url:	https://github.com/block/goose/pull/639
+additions:	212
+deletions:	13
+auto-merge:	disabled
+--
+Implement get_prompt and list_prompts per MCP: https://spec.modelcontextprotocol.io/specification/2024-11-05/server/prompts/
+
+- add a prompts.rs to goose-server/routes with additional /prompts/list and /prompts/get/:prompt_name routes that call the passthrough respectively
+- implement passthrough in agents
+- add the list_prompts and get_prompt declarations on the mcpclienttrait
+- implement list_prompts and get_prompt in mcp-client/client.rs

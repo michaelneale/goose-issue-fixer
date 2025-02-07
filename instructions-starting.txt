@@ -1,0 +1,18 @@
+task: the github issue in the $ISSUE_LINK environment variable.
+
+IMPORTANT instructions:
+
+* run `gh auth status` to check you can operate on github
+* use ../check-issue.sh $ISSUE_LINK to gather information on the issue being worked on and plan to implement.
+* use ../pr-similarity-util/target/release/pr_similarity_search --owner 'repo owner' --repo 'repo name' --query "short summary of issue" to fetch any other relevant info to consider.
+* make a branch in git before making any changes named suitably
+* analyse and work out where to perform the source code change, carefully
+* don't try to build the project, do not run tests, do not expect dev tools to work
+* to validate your change, you just want to double check syntactic correctness if you can
+* once reasonably happy with change (even if not perfect):
+  - push it as a branch to the origin repo
+  - use gh cli to open it as a pull request in draft state
+  - check the PR has been opened, be smart, not lazy
+  - use the ../check-pr.sh script to check there really is one
+  - once you know PR has started, you are finished, exit.
+

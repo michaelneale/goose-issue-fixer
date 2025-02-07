@@ -1,0 +1,28 @@
+title:	Removing UI Doc Image
+state:	MERGED
+author:	EbonyLouis
+labels:	
+assignees:	
+reviewers:	angiejones (Approved)
+projects:	
+milestone:	
+number:	824
+url:	https://github.com/block/goose/pull/824
+additions:	0
+deletions:	2
+auto-merge:	disabled
+--
+
+diff --git a/documentation/docs/getting-started/installation.md b/documentation/docs/getting-started/installation.md
+index 424d11053..8015af43f 100644
+--- a/documentation/docs/getting-started/installation.md
++++ b/documentation/docs/getting-started/installation.md
+@@ -145,8 +145,6 @@ Goose works with a set of [supported LLM providers][providers], and you’ll nee
+         Starting a session in the Goose Desktop is straightforward. After choosing your provider, you’ll see the session interface ready for use.
+         
+         Type your questions, tasks, or instructions directly into the input field, and Goose will get to work immediately. 
+-
+-        ![Install Extension](../assets/guides/ui-session-interface.png)
+     </TabItem>
+ </Tabs>
+ 

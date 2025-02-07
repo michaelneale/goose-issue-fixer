@@ -1,0 +1,33 @@
+title:	WYSIWYG Editor and Popover
+state:	DRAFT
+author:	blackgirlbytes
+labels:	
+assignees:	
+reviewers:	alexhancock (Requested), michaelneale (Requested)
+projects:	
+milestone:	
+number:	660
+url:	https://github.com/block/goose/pull/660
+additions:	595
+deletions:	20
+auto-merge:	disabled
+--
+Saw someone in [Slack](https://sq-block.slack.com/archives/C06PBQ52MCK/p1735877634229599) wish for a way to easily copy and paste markdown code in input or have a WYSIWYG input like Slack. 
+<img width="475" alt="Screenshot 2025-01-06 at 12 41 53 AM" src="https://github.com/user-attachments/assets/f0d45fb0-76d7-4b90-ae82-b34c94360bea" />
+
+
+While this doesnt allow you to paste and it preserves formatting. It does make it easier to:
+- add markdown to text like bold, italics, quotes, bullets etc because there is a WYSIWYG buttons
+- also it makes it easier to format code..you don't manually have to type backticks
+- and you can preview what it looks like before you press send
+
+Final decision for this was to convert this to a popover/floating toolbar. 
+
+<img width="1307" alt="Screenshot 2025-01-20 at 5 22 13 PM" src="https://github.com/user-attachments/assets/6adc3a1f-12e5-461a-aaa8-d330ec94a171" />
+
+
+Demo toggling formatting, position of floating toolbar/markdown popover, and preview
+
+https://github.com/user-attachments/assets/df5ff340-34bf-4263-a51a-81b4bd75e588
+
+

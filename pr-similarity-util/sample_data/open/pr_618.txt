@@ -1,0 +1,17 @@
+title:	[for testing app]
+state:	OPEN
+author:	michaelneale
+labels:	
+assignees:	
+reviewers:	
+projects:	
+milestone:	
+number:	618
+url:	https://github.com/block/goose/pull/618
+additions:	0
+deletions:	0
+auto-merge:	disabled
+--
+Please to try launching with an MCP:
+
+goose://extension?cmd=npx&arg=-y&arg=@modelcontextprotocol/server-memory&description=memory system&website=examplesite.com&env=KEYHERE=VALUEHERE

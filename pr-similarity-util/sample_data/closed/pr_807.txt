@@ -1,0 +1,47 @@
+title:	docs: changed home button text
+state:	MERGED
+author:	angiejones
+labels:	
+assignees:	
+reviewers:	acekyd (Approved), EbonyLouis (Requested)
+projects:	
+milestone:	
+number:	807
+url:	https://github.com/block/goose/pull/807
+additions:	2
+deletions:	3
+auto-merge:	disabled
+--
+
+## Before
+![image](https://github.com/user-attachments/assets/d861d690-e579-4831-9e16-375cda423db6)
+
+
+## After
+![image](https://github.com/user-attachments/assets/4e1c4bd4-4ed5-4649-8928-5b5afa42f9e6)
+
+
+## Reason for Change
+
+- button links to Install page. the download icon is misleading
+- button only encourages desktop download. we also have CLI option
+
+---
+- To see the specific tasks where the Asana app for GitHub is being used, see below:
+  - https://app.asana.com/0/0/1209244627242071
+diff --git a/documentation/src/pages/index.tsx b/documentation/src/pages/index.tsx
+index 949409abb..44987338d 100644
+--- a/documentation/src/pages/index.tsx
++++ b/documentation/src/pages/index.tsx
+@@ -23,9 +23,8 @@ function HomepageHeader() {
+           <Link
+             className="button button--primary button--lg"
+             to="docs/getting-started/installation"
+-          >
+-            <IconDownload />
+-            install goose desktop
++          >            
++            install goose
+           </Link>
+         </div>
+       </div>

@@ -1,0 +1,97 @@
+title:	chore(deps-dev): bump vite from 5.4.11 to 5.4.14 in /ui/desktop
+state:	OPEN
+author:	dependabot
+labels:	dependencies
+assignees:	
+reviewers:	
+projects:	
+milestone:	
+number:	746
+url:	https://github.com/block/goose/pull/746
+additions:	6
+deletions:	5
+auto-merge:	disabled
+--
+Bumps [vite](https://github.com/vitejs/vite/tree/HEAD/packages/vite) from 5.4.11 to 5.4.14.
+<details>
+<summary>Release notes</summary>
+<p><em>Sourced from <a href="https://github.com/vitejs/vite/releases">vite's releases</a>.</em></p>
+<blockquote>
+<h2>v5.4.14</h2>
+<p>Please refer to <a href="https://github.com/vitejs/vite/blob/v5.4.14/packages/vite/CHANGELOG.md">CHANGELOG.md</a> for details.</p>
+<h2>v5.4.13</h2>
+<p>Please refer to <a href="https://github.com/vitejs/vite/blob/v5.4.13/packages/vite/CHANGELOG.md">CHANGELOG.md</a> for details.</p>
+<h2>v5.4.12</h2>
+<p>This version contains a breaking change due to security fixes. See <a href="https://github.com/vitejs/vite/security/advisories/GHSA-vg6x-rcgg-rjx6">https://github.com/vitejs/vite/security/advisories/GHSA-vg6x-rcgg-rjx6</a> for more details.</p>
+<p>Please refer to <a href="https://github.com/vitejs/vite/blob/v5.4.12/packages/vite/CHANGELOG.md">CHANGELOG.md</a> for details.</p>
+</blockquote>
+</details>
+<details>
+<summary>Changelog</summary>
+<p><em>Sourced from <a href="https://github.com/vitejs/vite/blob/v5.4.14/packages/vite/CHANGELOG.md">vite's changelog</a>.</em></p>
+<blockquote>
+<h2><!-- raw HTML omitted -->5.4.14 (2025-01-21)<!-- raw HTML omitted --></h2>
+<ul>
+<li>fix: <code>preview.allowedHosts</code> with specific values was not respected (<a href="https://github.com/vitejs/vite/tree/HEAD/packages/vite/issues/19246">#19246</a>) (<a href="https://github.com/vitejs/vite/commit/9df6e6beabf0d18988ec13b8b742d2aba29662f9">9df6e6b</a>), closes <a href="https://redirect.github.com/vitejs/vite/issues/19246">#19246</a></li>
+<li>fix: allow CORS from loopback addresses by default (<a href="https://github.com/vitejs/vite/tree/HEAD/packages/vite/issues/19249">#19249</a>) (<a href="https://github.com/vitejs/vite/commit/7d1699ccf673e2790704756d89d2e1e4ee478fb4">7d1699c</a>), closes <a href="https://redirect.github.com/vitejs/vite/issues/19249">#19249</a></li>
+</ul>
+<h2><!-- raw HTML omitted -->5.4.13 (2025-01-20)<!-- raw HTML omitted --></h2>
+<ul>
+<li>fix: try parse <code>server.origin</code> URL (<a href="https://github.com/vitejs/vite/tree/HEAD/packages/vite/issues/19241">#19241</a>) (<a href="https://github.com/vitejs/vite/commit/5946215718e369c34f6cc9415391d2ca84efe327">5946215</a>), closes <a href="https://redirect.github.com/vitejs/vite/issues/19241">#19241</a></li>
+</ul>
+<h2><!-- raw HTML omitted -->5.4.12 (2025-01-20)<!-- raw HTML omitted --></h2>
+<ul>
+<li>fix!: check host header to prevent DNS rebinding attacks and introduce <code>server.allowedHosts</code> (<a href="https://github.com/vitejs/vite/commit/9da4abc8dde7f032ca1f23f425c2060b9b9ebd34">9da4abc</a>)</li>
+<li>fix!: default <code>server.cors: false</code> to disallow fetching from untrusted origins (<a href="https://github.com/vitejs/vite/commit/dfea38f1ff9f6fc0f0ca57927c527b0b9ffd2210">dfea38f</a>)</li>
+<li>fix: verify token for HMR WebSocket connection (<a href="https://github.com/vitejs/vite/commit/b71a5c89a1b4b913813ae665e6e04dd9d18c189c">b71a5c8</a>)</li>
+<li>chore: add deps update changelog (<a href="https://github.com/vitejs/vite/commit/ecd2375460edb4ae258fed4abe6c6f6ed7323b23">ecd2375</a>)</li>
+</ul>
+</blockquote>
+</details>
+<details>
+<summary>Commits</summary>
+<ul>
+<li><a href="https://github.com/vitejs/vite/commit/e7eb3c5559e6f7ec6f5ca834c2ff4d680f58e81b"><code>e7eb3c5</code></a> release: v5.4.14</li>
+<li><a href="https://github.com/vitejs/vite/commit/7d1699ccf673e2790704756d89d2e1e4ee478fb4"><code>7d1699c</code></a> fix: allow CORS from loopback addresses by default (<a href="https://github.com/vitejs/vite/tree/HEAD/packages/vite/issues/19249">#19249</a>)</li>
+<li><a href="https://github.com/vitejs/vite/commit/9df6e6beabf0d18988ec13b8b742d2aba29662f9"><code>9df6e6b</code></a> fix: <code>preview.allowedHosts</code> with specific values was not respected (<a href="https://github.com/vitejs/vite/tree/HEAD/packages/vite/issues/19246">#19246</a>)</li>
+<li><a href="https://github.com/vitejs/vite/commit/a1824c5ff13578d590176275ac309a0ab48ee5b9"><code>a1824c5</code></a> release: v5.4.13</li>
+<li><a href="https://github.com/vitejs/vite/commit/5946215718e369c34f6cc9415391d2ca84efe327"><code>5946215</code></a> fix: try parse <code>server.origin</code> URL (<a href="https://github.com/vitejs/vite/tree/HEAD/packages/vite/issues/19241">#19241</a>)</li>
+<li><a href="https://github.com/vitejs/vite/commit/f428aa9af8534b214abb09fe4456653eb09913e7"><code>f428aa9</code></a> release: v5.4.12</li>
+<li><a href="https://github.com/vitejs/vite/commit/9da4abc8dde7f032ca1f23f425c2060b9b9ebd34"><code>9da4abc</code></a> fix!: check host header to prevent DNS rebinding attacks and introduce `serve...</li>
+<li><a href="https://github.com/vitejs/vite/commit/b71a5c89a1b4b913813ae665e6e04dd9d18c189c"><code>b71a5c8</code></a> fix: verify token for HMR WebSocket connection</li>
+<li><a href="https://github.com/vitejs/vite/commit/dfea38f1ff9f6fc0f0ca57927c527b0b9ffd2210"><code>dfea38f</code></a> fix!: default <code>server.cors: false</code> to disallow fetching from untrusted origins</li>
+<li><a href="https://github.com/vitejs/vite/commit/ecd2375460edb4ae258fed4abe6c6f6ed7323b23"><code>ecd2375</code></a> chore: add deps update changelog</li>
+<li>See full diff in <a href="https://github.com/vitejs/vite/commits/v5.4.14/packages/vite">compare view</a></li>
+</ul>
+</details>
+<br />
+
+
+[![Dependabot compatibility score](https://dependabot-badges.githubapp.com/badges/compatibility_score?dependency-name=vite&package-manager=npm_and_yarn&previous-version=5.4.11&new-version=5.4.14)](https://docs.github.com/en/github/managing-security-vulnerabilities/about-dependabot-security-updates#about-compatibility-scores)
+
+Dependabot will resolve any conflicts with this PR as long as you don't alter it yourself. You can also trigger a rebase manually by commenting `@dependabot rebase`.
+
+[//]: # (dependabot-automerge-start)
+[//]: # (dependabot-automerge-end)
+
+---
+
+<details>
+<summary>Dependabot commands and options</summary>
+<br />
+
+You can trigger Dependabot actions by commenting on this PR:
+- `@dependabot rebase` will rebase this PR
+- `@dependabot recreate` will recreate this PR, overwriting any edits that have been made to it
+- `@dependabot merge` will merge this PR after your CI passes on it
+- `@dependabot squash and merge` will squash and merge this PR after your CI passes on it
+- `@dependabot cancel merge` will cancel a previously requested merge and block automerging
+- `@dependabot reopen` will reopen this PR if it is closed
+- `@dependabot close` will close this PR and stop Dependabot recreating it. You can achieve the same result by closing it manually
+- `@dependabot show <dependency name> ignore conditions` will show all of the ignore conditions of the specified dependency
+- `@dependabot ignore this major version` will close this PR and stop Dependabot creating any more for this major version (unless you reopen the PR or upgrade to it yourself)
+- `@dependabot ignore this minor version` will close this PR and stop Dependabot creating any more for this minor version (unless you reopen the PR or upgrade to it yourself)
+- `@dependabot ignore this dependency` will close this PR and stop Dependabot creating any more for this dependency (unless you reopen the PR or upgrade to it yourself)
+You can disable automated security fix PRs for this repo from the [Security Alerts page](https://github.com/block/goose/network/alerts).
+
+</details>

@@ -1,0 +1,32 @@
+title:	docs: change youtube link
+state:	MERGED
+author:	angiejones
+labels:	
+assignees:	
+reviewers:	acekyd (Approved)
+projects:	
+milestone:	
+number:	813
+url:	https://github.com/block/goose/pull/813
+additions:	1
+deletions:	1
+auto-merge:	disabled
+--
+new yt, who dis
+
+---
+- To see the specific tasks where the Asana app for GitHub is being used, see below:
+  - https://app.asana.com/0/0/1209244627242076
+diff --git a/documentation/docusaurus.config.ts b/documentation/docusaurus.config.ts
+index bac0b1eb6..6bb65be4d 100644
+--- a/documentation/docusaurus.config.ts
++++ b/documentation/docusaurus.config.ts
+@@ -127,7 +127,7 @@ const config: Config = {
+             },
+             {
+               label: "YouTube",
+-              href: "https://www.youtube.com/@goose.videos",
++              href: "https://www.youtube.com/@blockopensource",
+             },
+             {
+               label: "LinkedIn",
