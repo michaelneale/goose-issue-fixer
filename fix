@@ -1,0 +1,64 @@
+#!/bin/bash
+
+# Check if PR URL is provided
+if [ $# -eq 0 ]; then
+    echo "Error: Please provide a GitHub pull request URL"
+    echo "Usage: $0 <github-pr-url>"
+    exit 1
+fi
+
+PR_URL="$1"
+
+# Extract repo info from GitHub PR URL
+# Expected format: https://github.com/owner/repo/pull/number
+REPO_URL=$(echo $PR_URL | sed -E 's|https://github.com/([^/]+/[^/]+)/pull/.*|\1|')
+PR_NUMBER=$(echo $PR_URL | sed -E 's|.*/pull/([0-9]+).*|\1|')
+
+# Always clean the repo directory for PR checkout
+if [ -d "repo" ]; then
+    echo "Removing existing repo directory..."
+    rm -rf repo
+fi
+
+echo "Creating and initializing repo directory..."
+mkdir repo
+cd repo
+
+# Clone the repository
+echo "Cloning repository..."
+git clone "https://github.com/${REPO_URL}.git" .
+if [ $? -ne 0 ]; then
+    echo "Error: Failed to clone repository"
+    cd ..
+    rm -rf repo
+    exit 1
+fi
+
+# Set the remote repository for gh CLI
+echo "Setting up GitHub CLI remote..."
+gh repo set-default "https://github.com/${REPO_URL}"
+if [ $? -ne 0 ]; then
+    echo "Error: Failed to set default repository"
+    cd ..
+    rm -rf repo
+    exit 1
+fi
+
+# Fetch and checkout the PR using gh cli
+echo "Fetching and checking out PR #${PR_NUMBER}..."
+gh pr checkout ${PR_NUMBER}
+if [ $? -ne 0 ]; then
+    echo "Error: Failed to checkout PR"
+    cd ..
+    rm -rf repo
+    exit 1
+fi
+
+# Export PR URL as environment variable
+export PR_LINK="$PR_URL"
+
+# Run goose with the fixing instructions
+echo "Starting fix process..."
+goose run -i "../instructions-fixing.txt"
+
+cd ..

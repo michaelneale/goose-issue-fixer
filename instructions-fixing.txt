@@ -1,0 +1,35 @@
+task: you are to fix a broken build in github pull request, its link is in environment variable called $PR_LINK
+
+This is a work in progress which we will debug via checking the status of CI on the github pull request and try to fix a broken build.
+You will not be lazy and be smart about using things like gh cli where you need to.
+The code is checked out in the current directory.
+
+IMPORTANT instructions:
+
+* run `gh auth status` to check you can operate on github
+* focus on small failures you can fix, may be formatting, tiny test change, retrying something, or typo.
+* you are running unsupervised, do NOT ask the user to do something directly, do it
+* Do not give up too soon but try to solve things as you are working with github, you have the ability to.
+
+Working the problem:
+
+step 1: use ../check-ci.sh 'link to pr' to look at checks for this PR  
+  - if there is even one failure, continue on to fixing it in step 2
+  - make sure you actually see some checks have run or are running
+  - check that it actually returns something sensible, don't be careless in reading the response
+step 2: If any failures, correct them as best you can from what the check logs show:
+  * If checks are not failing, you don't need to investigate that check, don't care about warnings.
+  * If you need to make changes to source code:   
+    * analyse and work out where to perform the source code change, carefully
+    * don't try to build the project, do not run tests, do not expect dev tools to work
+    * to validate your change, you just want to double check syntactic correctness if you can
+step 3: commit those changes when happy, and push them to the pull request branch.
+    - after pushing any changes, pause for 90 seconds to let checks in github do some work      
+step 4: repeat back to step 1 until we have a passing build.
+
+step 5: if you make it this far, you are done! touch a file  ../FINISHED so it knows it is finished.
+
+
+
+
+
