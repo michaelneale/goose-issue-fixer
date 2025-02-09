@@ -1,0 +1,1 @@
+ using gh cli tool, can you look at some recent (<100 day) issues in https://github.com/block/goose/ - and consider if they are easy to fix (run ./pr-similarity-util/target/release/pr_similarity_search --owner 'repo owner' --repo 'repo name' --query "short summary of issue" to fetch any other relevant info to consider, along with how complex it seems) - and list it here

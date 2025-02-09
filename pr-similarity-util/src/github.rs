@@ -1,4 +1,4 @@
-use anyhow::{Result, anyhow};
+use anyhow::{anyhow, Result};
 use octocrab::Octocrab;
 use serde::Deserialize;
 use std::env;
@@ -53,12 +53,10 @@ pub struct PullRequestSummary {
 
 impl GitHubClient {
     pub fn new(owner: String, repo: String) -> Result<Self> {
-        let token = env::var("GITHUB_READ_TOKEN")
-            .map_err(|_| anyhow!("GITHUB_READ_TOKEN environment variable not set"))?;
+        let token = env::var("GITHUB_TOKEN")
+            .map_err(|_| anyhow!("GITHUB_TOKEN environment variable not set"))?;
 
-        let client = Octocrab::builder()
-            .personal_token(token)
-            .build()?;
+        let client = Octocrab::builder().personal_token(token).build()?;
 
         Ok(Self {
             client,
@@ -70,12 +68,13 @@ impl GitHubClient {
     pub async fn list_recent_merged_prs(&self, limit: usize) -> Result<Vec<PullRequestSummary>> {
         let mut all_prs = Vec::new();
         let mut page = 1u32;
-        
+
         while all_prs.len() < limit {
-            let prs = self.client
+            let prs = self
+                .client
                 .pulls(&self.owner, &self.repo)
                 .list()
-                .state(octocrab::params::State::Closed)  // We want closed PRs
+                .state(octocrab::params::State::Closed) // We want closed PRs
                 .sort(octocrab::params::pulls::Sort::Created)
                 .direction(octocrab::params::Direction::Descending)
                 .per_page(100)
@@ -102,7 +101,8 @@ impl GitHubClient {
                             _ => "other",
                         },
                         None => "unknown",
-                    }.to_string();
+                    }
+                    .to_string();
 
                     all_prs.push(PullRequestSummary {
                         number: pr.number,
@@ -121,13 +121,15 @@ impl GitHubClient {
 
     pub async fn get_pull_request_details(&self, pr_number: u64) -> Result<PullRequestDetails> {
         // Get PR details
-        let pr = self.client
+        let pr = self
+            .client
             .pulls(&self.owner, &self.repo)
             .get(pr_number)
             .await?;
 
         // Get PR comments
-        let comments = self.client
+        let comments = self
+            .client
             .issues(&self.owner, &self.repo)
             .list_comments(pr_number)
             .send()
@@ -147,7 +149,8 @@ impl GitHubClient {
                 _ => "other",
             },
             None => "unknown",
-        }.to_string();
+        }
+        .to_string();
 
         // Check if PR was merged
         let merged = pr.merged_at.is_some();
@@ -199,9 +202,15 @@ impl GitHubClient {
             head_sha: &'a str,
         }
 
-        let params = Params { head_sha: commit_sha };
-        let response: Response = self.client
-            .get(format!("/repos/{}/{}/actions/runs", self.owner, self.repo), Some(&params))
+        let params = Params {
+            head_sha: commit_sha,
+        };
+        let response: Response = self
+            .client
+            .get(
+                format!("/repos/{}/{}/actions/runs", self.owner, self.repo),
+                Some(&params),
+            )
             .await?;
 
         let mut runs = Vec::new();
@@ -248,10 +257,11 @@ impl GitHubClient {
             email: Option<String>,
         }
 
-        let route = format!("/repos/{}/{}/pulls/{}/commits", self.owner, self.repo, pr_number);
-        let commits: Vec<CommitResponse> = self.client
-            .get(&route, None::<&()>)
-            .await?;
+        let route = format!(
+            "/repos/{}/{}/pulls/{}/commits",
+            self.owner, self.repo, pr_number
+        );
+        let commits: Vec<CommitResponse> = self.client.get(&route, None::<&()>).await?;
 
         let mut commit_infos = Vec::new();
         for commit in commits {
@@ -274,7 +284,7 @@ impl GitHubClient {
             self.owner, self.repo, pr_number
         );
 
-        let token = env::var("GITHUB_READ_TOKEN")?;
+        let token = env::var("GITHUB_TOKEN")?;
         let client = reqwest::Client::new();
         let response = client
             .get(&url)

@@ -45,17 +45,12 @@ async fn main() -> Result<()> {
     }
 
     // Initialize search index
-    let mut search_index = PRSearchIndex::new(cli.owner, cli.repo)?;
+    let mut search_index = PRSearchIndex::new(cli.owner, cli.repo, &cli.cache_dir)?;
 
-    // Check if we need to refresh the cache
-    let cache_file = cli.cache_dir.join("prs.json");
-    let should_refresh = cli.force_refresh || !cache_file.exists();
-
-    if should_refresh {
-        println!("Loading {} recent PRs from GitHub...", cli.limit);
-        let prs = search_index.load_recent_prs(cli.limit).await?;
-        println!("Loaded {} PRs", prs.len());
-    }
+    // Load PRs (from cache or GitHub)
+    println!("Loading PRs{}...", if cli.force_refresh { " (forced refresh)" } else { "" });
+    let prs = search_index.load_recent_prs(cli.limit, cli.force_refresh).await?;
+    println!("Loaded {} PRs", prs.len());
 
     // If a query is provided, perform the search
     if let Some(query) = cli.query {

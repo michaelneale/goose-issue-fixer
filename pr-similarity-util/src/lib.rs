@@ -1,10 +1,11 @@
 use anyhow::Result;
 use tantivy::{
-    schema::{Schema, STORED, TEXT, Value},
+    schema::{Schema, STORED, TEXT},
     Index, IndexWriter,
     collector::TopDocs,
     query::QueryParser,
-    TantivyDocument,
+    Document,
+    directory::MmapDirectory,
 };
 
 pub mod github;
@@ -18,7 +19,7 @@ pub struct PRSearchIndex {
 }
 
 impl PRSearchIndex {
-    pub fn new(owner: String, repo: String) -> Result<Self> {
+    pub fn new(owner: String, repo: String, cache_dir: &std::path::Path) -> Result<Self> {
         // Create schema
         let mut schema_builder = Schema::builder();
         schema_builder.add_text_field("pr_number", TEXT | STORED);
@@ -30,8 +31,10 @@ impl PRSearchIndex {
         schema_builder.add_text_field("diff", TEXT);
         let schema = schema_builder.build();
 
-        // Create index in memory
-        let index = Index::create_in_ram(schema);
+        // Create/open index on disk
+        std::fs::create_dir_all(cache_dir)?;
+        let dir = MmapDirectory::open(cache_dir)?;
+        let index = Index::open_or_create(dir, schema)?;
         let writer = index.writer(50_000_000)?; // 50MB buffer
 
         let description_field = index.schema()
@@ -39,7 +42,6 @@ impl PRSearchIndex {
             .expect("description field not found");
 
         let query_parser = QueryParser::for_index(&index, vec![description_field]);
-
         let github = GitHubClient::new(owner, repo)?;
 
         Ok(Self {
@@ -50,7 +52,17 @@ impl PRSearchIndex {
         })
     }
 
-    pub async fn load_recent_prs(&mut self, limit: usize) -> Result<Vec<PullRequestSummary>> {
+    pub async fn load_recent_prs(&mut self, limit: usize, force_refresh: bool) -> Result<Vec<PullRequestSummary>> {
+        if force_refresh {
+            self.writer.delete_all_documents()?;
+        }
+
+        // If we have documents and aren't forcing refresh, skip loading
+        let reader = self.index.reader()?;
+        if !force_refresh && reader.searcher().num_docs() > 0 {
+            return Ok(vec![]); // Return empty vec since we don't need the summaries
+        }
+
         let prs = self.github.list_recent_merged_prs(limit).await?;
         
         for pr in &prs {
@@ -65,7 +77,7 @@ impl PRSearchIndex {
     }
 
     fn index_pr(&mut self, pr: &PullRequestDetails) -> Result<()> {
-        let mut doc = TantivyDocument::default();
+        let mut doc = Document::default();
         let schema = self.index.schema();
         
         // Get all the field accessors
@@ -121,35 +133,35 @@ impl PRSearchIndex {
         let files_field = schema.get_field("files").expect("files field not found");
 
         for (score, doc_address) in top_docs {
-            let retrieved_doc: TantivyDocument = searcher.doc(doc_address)?;
+            let retrieved_doc = searcher.doc(doc_address)?;
             
             let pr_number = retrieved_doc
                 .get_first(pr_number_field)
-                .and_then(|v| v.as_str())
+                .and_then(|v| v.as_text())
                 .ok_or_else(|| anyhow::anyhow!("pr_number not found"))?
                 .to_string();
             
             let title = retrieved_doc
                 .get_first(title_field)
-                .and_then(|v| v.as_str())
+                .and_then(|v| v.as_text())
                 .ok_or_else(|| anyhow::anyhow!("title not found"))?
                 .to_string();
 
             let status = retrieved_doc
                 .get_first(status_field)
-                .and_then(|v| v.as_str())
+                .and_then(|v| v.as_text())
                 .ok_or_else(|| anyhow::anyhow!("status not found"))?
                 .to_string();
 
             let checks_status = retrieved_doc
                 .get_first(checks_field)
-                .and_then(|v| v.as_str())
+                .and_then(|v| v.as_text())
                 .ok_or_else(|| anyhow::anyhow!("checks_status not found"))?
                 .to_string();
 
             let files = retrieved_doc
                 .get_first(files_field)
-                .and_then(|v| v.as_str())
+                .and_then(|v| v.as_text())
                 .ok_or_else(|| anyhow::anyhow!("files not found"))?
                 .to_string();
 

@@ -2,3 +2,5 @@ target
 node_modules
 repo
 FINISHED
+pr-similarity-util/.pr_cache
+.pr_cache
