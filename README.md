@@ -1,5 +1,11 @@
 This project aims to read from issues and then create and manage its own PRs, to completion. Uses `goose run` heavily.
 
+# Installing
+
+```sh
+git clone --depth=1 https://github.com/michaelneale/goose-issue-fixer ~/goose-issue-fixer && ln -sf ~/goose-issue-fixer/solve ~/goose-issue-fixer/fix ~/.local/bin/
+```
+
 # Running
 
 build the similarity searcher:
