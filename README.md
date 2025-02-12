@@ -6,7 +6,16 @@ This project aims to read from issues and then create and manage its own PRs, to
 git clone --depth=1 https://github.com/michaelneale/goose-issue-fixer ~/goose-issue-fixer && ln -sf ~/goose-issue-fixer/solve ~/goose-issue-fixer/fix ~/.local/bin/
 ```
 
-# Running
+## using
+
+```sh
+fix <link to pull request which is broken>
+```
+
+sit back and let goose try and fix it.
+
+# Running from source
+
 
 build the similarity searcher:
 
