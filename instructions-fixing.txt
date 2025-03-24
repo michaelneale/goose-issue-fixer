@@ -26,7 +26,13 @@ step 3: commit those changes when happy, and push them to the pull request branc
     - after pushing any changes, pause for 90 seconds to let checks in github do some work      
 step 4: repeat back to step 1 until we have a passing build.
 
-step 5: if you make it this far, you are done! touch a file  ../FINISHED so it knows it is finished.
+step 5: use ../check-pr.sh 'put link to PR here' to check if there are any comments which mention @goose in the PR, if there are new ones, address them and repeat.
+  - this may mean thinking and making a code change or it may mean making a comment to answer the question.
+  - if need to make code changes and commit
+  - try to not add any redundant comments or changes if you already have addressed it (look at recent comments if not sure)
+  - repeat back to step 1 to check on things.
+
+step 6: if you make it this far, you are done! touch a file  ../FINISHED so it knows it is finished.
 
 
 
