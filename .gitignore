@@ -4,3 +4,5 @@ repo
 FINISHED
 pr-similarity-util/.pr_cache
 .pr_cache
+jira-similarity-util/.jira_cache
+.env

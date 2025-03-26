@@ -1,0 +1,28 @@
+task: Create a Pull Request against {repo} that solves the issue described in the jira ticket with key {original_ticket_key}.
+
+IMPORTANT instructions:
+
+* you are running unsupervised, do NOT ask the user to do something directly, do it
+* Check for context files within the {issue_cache_directory} to help guide your approach
+  - `llm_context_issue_summary.md` contains a summary of the ticket along with summaries of other tickets, ranked by similarity.
+  - `raw_issues.json` contains the raw JSON representation of all jira tickets that were fetched
+* If you think a similar issue is relevant, and it has a linked pull request URL, you can view details about that pull request using the gh cli
+  - use gh pr view <url> to see general details and the PR description
+  - use gh pr diff <url> to see the actual code changes
+* After looking at the Summary and Description of the original JIRA ticket, as well as the context for similar tickets, you can run the {development_dir}/goose-issue-fixer/jira-similarity-util/target/release/jira-similarity-util search -keywords=<keywords> -components=<components> -labels=<labels> -project=<project> to search for additional JIRA tickets that might be relevant
+* You can find the git repository to work from checked out in the {development_dir} directory
+  - that directory contains multiple repos that are checked out, you are interested in {repo} 
+* make a branch in git before making any changes named suitably
+  - Ideally, it should be named {suggested_branch_name}
+* analyse and work out where to perform the source code change, carefully
+* don't try to build the project, do not run tests, do not expect dev tools to work
+* to validate your change, you just want to double check syntactic correctness if you can
+* once reasonably happy with change (even if not perfect):
+  - push it as a branch to the origin repo
+  - use gh cli to open it as a pull request in draft state
+    - The title of the PR should start with [{original_ticket_key}][Goose]
+    - At the end of the PR description, include the JIRA ticket key ({original_ticket_key}) and a mention that this code was all generated via Goose based on the ticket
+  - check the PR has been opened, be smart, not lazy
+    - use the gh cli to view the PR and confirm it exists
+    - check to make sure the latest commit has been pushed to the remote
+  - once you know PR has started, you are finished, exit.
