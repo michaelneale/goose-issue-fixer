@@ -6,7 +6,7 @@ You will not be lazy and be smart about using things like gh cli where you need 
 
 IMPORTANT instructions:
 
-* use ../check-issue.sh $ISSUE_LINK to remind yourself of the issue being worked on.
+* use ../check-issue.sh to remind yourself of the issue being worked on.
 * use gh cli to check that there is a PR for this branch we are working on. 
 * you are running unsupervised, do NOT ask the user to do something directly, do it
 * Do not give up but try to solve things if you are working with github, you have the ability to.

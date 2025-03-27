@@ -1,40 +1,69 @@
 #!/bin/bash
 
-# Function to extract repo from GitHub URL
-extract_repo() {
-    local url=$1
-    echo "$url" | sed -E 's|https://github.com/([^/]+/[^/]+)/.*|\1|'
-}
+# Define constants
+ISSUE_CONTENT_FILE="issue_content.json"
+SEPARATOR="----------------------------------------"
 
-# Function to extract issue number from GitHub URL
-extract_issue_number() {
-    local url=$1
-    echo "$url" | grep -o '/issues/[0-9]*' | grep -o '[0-9]*'
-}
-
-# Show issue information
-show_issue_info() {
-    local issue_url=$1
-    local repo=$(extract_repo "$issue_url")
-    local issue_number=$(extract_issue_number "$issue_url")
-    
-    echo "Fetching information for issue #$issue_number from $repo"
-    echo "----------------------------------------"
-    
-    echo -e "\nIssue Details:"
-    echo "----------------------------------------"
-    gh issue view "$issue_number" -R "$repo"
-    echo "----------------------------------------"
-}
-
-# If no arguments provided, show usage
-if [ $# -lt 1 ]; then
-    echo "Usage: $0 <issue-url>"
-    echo "Example: $0 https://github.com/owner/reponame/issues/1022"
+# Check if jq is installed
+if ! command -v jq &> /dev/null; then
+    echo "Error: jq is required but not installed. Please install jq to continue."
     exit 1
 fi
 
-ISSUE_URL=$1
+# Function to display issue content
+display_issue_content() {
+    local file_path="$1"
+    
+    echo "Using existing issue content from $file_path"
+    echo "$SEPARATOR"
+    
+    # Determine if it's GitHub or JIRA content by checking the file structure
+    if grep -q "\"fields\":" "$file_path"; then
+        # It's JIRA content
+        echo -e "\nJIRA Details:"
+        echo "$SEPARATOR"
+        jq -r '.fields.summary, "", .fields.description' "$file_path"
+    else
+        # It's GitHub content
+        echo -e "\nGitHub Issue Details:"
+        echo "$SEPARATOR"
+        jq -r '.title, "", .body' "$file_path"
+    fi
+    echo "$SEPARATOR"
+}
 
-# Show the issue information
-show_issue_info "$ISSUE_URL"
+# Function to find issue content file
+find_issue_content() {
+    # Check locations in priority order
+    local possible_locations=(
+        "$ISSUE_CONTENT_FILE"
+        "../$ISSUE_CONTENT_FILE"
+        "$(pwd)/$ISSUE_CONTENT_FILE"
+        "$(dirname "$(pwd)")/$ISSUE_CONTENT_FILE"
+    )
+    
+    for location in "${possible_locations[@]}"; do
+        if [ -f "$location" ]; then
+            echo "$location"
+            return 0
+        fi
+    done
+    
+    echo ""
+    return 1
+}
+
+# Main execution
+main() {
+    local file_path=$(find_issue_content)
+    
+    if [ -n "$file_path" ]; then
+        display_issue_content "$file_path"
+    else
+        echo "No issue_content.json found"
+        echo "Note: This file is created by the 'solve' script when processing a ticket."
+    fi
+}
+
+# Run the main function
+main

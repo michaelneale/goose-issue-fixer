@@ -1,84 +1,357 @@
 #!/bin/bash
 set -e
 
-# Check if issue URL is provided
-if [ $# -eq 0 ]; then
-    echo "Please provide a GitHub issue URL"
-    echo "Usage: $0 <github-issue-url> [--reset]"
-    exit 1
-fi
+# Constants
+CONFIG_FILE="jira-config"
+ISSUE_CONTENT_FILE="issue_content.json"
+REPO_DIR="repo"
+FINISHED_FILE="FINISHED"
 
-echo "running preflight checks..."
-goose run --text "check that gh cli is available, if not suggest to install it. 'gh auth status' to check is ready to use"
+# Function to check if URL is a JIRA URL
+is_jira_url() {
+    local url=$1
+    [[ $url =~ block\.atlassian\.net ]] && return 0 || return 1
+}
 
+# Function to check if URL is a GitHub issue URL
+is_github_url() {
+    local url=$1
+    [[ $url =~ github\.com.*/issues/ ]] && return 0 || return 1
+}
 
+# Function to extract JIRA ticket ID
+extract_jira_id() {
+    local url=$1
+    if [[ $url =~ browse/([A-Z]+-[0-9]+) ]]; then
+        echo "${BASH_REMATCH[1]}"
+    elif [[ $url =~ selectedIssue=([A-Z]+-[0-9]+) ]]; then
+        echo "${BASH_REMATCH[1]}"
+    else
+        echo ""
+    fi
+}
 
-ISSUE_URL="$1"
-RESET=false
+# Function to extract GitHub repo from issue URL
+extract_github_repo() {
+    local url=$1
+    echo $url | sed -E 's|https://github.com/([^/]+/[^/]+)/issues/.*|\1|'
+}
 
-# Check for reset flag
-if [ "$2" = "--reset" ]; then
-    RESET=true
-fi
-
-# Extract repo info from GitHub issue URL
-# Expected format: https://github.com/owner/repo/issues/number
-REPO_URL=$(echo $ISSUE_URL | sed -E 's|https://github.com/([^/]+/[^/]+)/issues/.*|\1|')
-
-# Handle repo directory
-if [ "$RESET" = true ] && [ -d "repo" ]; then
-    echo "Resetting repo directory..."
-    rm -rf repo
-fi
-
-if [ ! -d "repo" ]; then
-    echo "Creating and initializing repo directory..."
-    mkdir repo
-    cd repo
-    git clone "https://github.com/${REPO_URL}.git" .
-    if [ $? -ne 0 ]; then
-        echo "Error: Failed to clone repository"
-        cd ..
-        rm -rf repo
+# Function to get JIRA configuration from jira-config file
+# TODO: replace with JIRA MCP or other ways to handle the configs
+get_jira_config() {
+    local config_file="$CONFIG_FILE"
+    
+    if [ ! -f "$config_file" ]; then
+        echo "Error: JIRA config file not found at $config_file"
         exit 1
     fi
-    cd ..
-elif [ -z "$(ls -A repo)" ]; then
-    echo "Repo directory is empty, cloning repository..."
-    cd repo
-    git clone "https://github.com/${REPO_URL}.git" .
-    if [ $? -ne 0 ]; then
-        echo "Error: Failed to clone repository"
-        cd ..
-        rm -rf repo
+    
+    # Extract JIRA configuration values
+    JIRA_TOKEN=$(grep "JIRA_TOKEN" "$config_file" | cut -d'"' -f2)
+    JIRA_EMAIL=$(grep "JIRA_EMAIL" "$config_file" | cut -d'"' -f2)
+    JIRA_SERVER=$(grep "JIRA_SERVER" "$config_file" | cut -d'"' -f2)
+    
+    # Check if values were successfully extracted
+    if [ -z "$JIRA_TOKEN" ] || [ -z "$JIRA_EMAIL" ] || [ -z "$JIRA_SERVER" ]; then
+        echo "Please ensure your jira-config file contains:"
+        echo "  - JIRA_TOKEN: \"your_token\""
+        echo "  - JIRA_EMAIL: \"your_email\""
+        echo "  - JIRA_SERVER: \"your_server\""
         exit 1
     fi
-    cd ..
-fi
+    
+    export JIRA_TOKEN JIRA_EMAIL JIRA_SERVER
+}
 
-# Navigate to repo directory
-cd repo
+# Function to get JIRA ticket content
+get_jira_content() {
+    local ticket_id=$1
+    
+    # Ensure JIRA configuration is loaded
+    if [ -z "$JIRA_TOKEN" ] || [ -z "$JIRA_EMAIL" ] || [ -z "$JIRA_SERVER" ]; then
+        get_jira_config
+    fi
 
-# Export issue URL as environment variable
-export ISSUE_LINK="$ISSUE_URL"
+    # Use curl to fetch JIRA ticket content
+    local response=$(curl -s \
+        --request GET \
+        --url "${JIRA_SERVER}/rest/api/3/issue/$ticket_id" \
+        --user "${JIRA_EMAIL}:${JIRA_TOKEN}" \
+        --header "Accept: application/json")
+    
+    # Check if the response contains an error
+    if [[ $response =~ "errorMessages" ]]; then
+        echo "Error fetching JIRA ticket: $response"
+        exit 1
+    fi
 
-# Check if we're on main branch and have no unstaged changes
-CURRENT_BRANCH=$(git branch --show-current)
-UNSTAGED_CHANGES=$(git status --porcelain)
+    echo "$response"
+}
 
-# Choose instruction file based on conditions
-if [ "$CURRENT_BRANCH" = "main" ] && [ -z "$UNSTAGED_CHANGES" ]; then    
-    echo "Starting a brand new task!"
-    goose run -i "../instructions-starting.txt"
-    echo "Now will try to finish it to completion"
-fi    
+# Function to determine repository from JIRA ticket
+get_repo_from_jira() {
+    echo "Looking for repo in JIRA content" >&2
 
-# Keep running the iterating instructions until FINISHED file exists
-while [ ! -f "../FINISHED" ]; do
-    echo "Working the task..."
-    goose run -i "../instructions-iterating.txt"
-    # Add a small delay to prevent too rapid iterations
-    sleep 1
-done
+    local ticket_id=$1
+    
+    # Load JIRA configuration
+    JIRA_TOKEN=$(grep "JIRA_TOKEN" "$CONFIG_FILE" | cut -d'"' -f2)
+    JIRA_EMAIL=$(grep "JIRA_EMAIL" "$CONFIG_FILE" | cut -d'"' -f2)
+    JIRA_SERVER=$(grep "JIRA_SERVER" "$CONFIG_FILE" | cut -d'"' -f2)
+    
+    # Direct curl command to fetch JIRA content
+    echo "Fetching JIRA content for repository analysis..." >&2
+    local ticket_content=$(curl -s \
+        --request GET \
+        --url "${JIRA_SERVER}/rest/api/3/issue/$ticket_id" \
+        --user "${JIRA_EMAIL}:${JIRA_TOKEN}" \
+        --header "Accept: application/json")
+    
+    # Check if the response contains an error
+    if [[ "$ticket_content" == *"errorMessages"* ]]; then
+        echo "Warning: JIRA API returned an error for ticket $ticket_id" >&2
+        echo "Will use 'unknown' as repository" >&2
+        echo "unknown"
+        return 0
+    fi
 
-echo "FINISHED file found, exiting..."
+    # Create a temporary file with the ticket content
+    local temp_file=$(mktemp)
+    echo "$ticket_content" > "$temp_file"
+
+    echo "Analyzing JIRA ticket $ticket_id to determine repository..." >&2
+    # Use goose to analyze the ticket content and determine the repository
+    local prompt="Here is the content of JIRA ticket $ticket_id. Based on this content, determine which GitHub repository this work should be done in. Look for repository mentions, code references, or related technical context. Do a ping test on each one you find with https://github.com/squareup/<repo>. Only output the repo name, nothing else. If you cannot determine the repository with high confidence, output 'unknown'."
+    
+    raw_output=$(goose run --text "$prompt
+    
+    Ticket content:
+    $(cat $temp_file)")
+        
+    # Extract just the repository name using grep
+    repo=$(echo "$raw_output" | grep -o 'squareup/[a-zA-Z0-9_-]\+' | head -1)
+    
+    # Clean up temp file
+    rm "$temp_file"
+    
+    echo "Found repository: $repo" >&2
+
+    # If no repo was found, set to unknown
+    [ -z "$repo" ] && repo="unknown"
+    echo "$repo"
+}
+
+# Function to handle GitHub issues
+handle_github_issue() {
+    local ticket_url=$1
+    local repo_url=$(extract_github_repo "$ticket_url")
+    echo "GitHub issue detected: $ticket_url"
+    echo "Repository: $repo_url"
+    ISSUE_TYPE="github"
+    return 0
+}
+
+# Function to handle JIRA tickets
+handle_jira_ticket() {
+    local ticket_url=$1
+    local jira_id=$(extract_jira_id "$ticket_url")
+    
+    if [ -z "$jira_id" ]; then
+        echo "Error: Could not extract JIRA ticket ID from URL"
+        return 1
+    fi
+    
+    local repo_url=$(get_repo_from_jira "$jira_id")
+    
+    if [ -z "$repo_url" ] || [ "$repo_url" = "unknown" ]; then
+        echo "Error: Could not determine repository for JIRA ticket"
+        return 1
+    fi
+    
+    echo "Using repository URL: $repo_url"
+    ISSUE_TYPE="jira"
+    JIRA_ID="$jira_id"
+    REPO_URL="$repo_url"
+    return 0
+}
+
+# Function to setup repository
+setup_repository() {
+    local repo_url=$1
+    local reset=$2
+    
+    # Handle repo directory
+    if [ "$reset" = true ] && [ -d "$REPO_DIR" ]; then
+        echo "Resetting repo directory..."
+        rm -rf "$REPO_DIR"
+    fi
+    
+    if [ ! -d "$REPO_DIR" ]; then
+        echo "Creating and initializing repo directory..."
+        mkdir "$REPO_DIR"
+        cd "$REPO_DIR"
+        git clone "https://github.com/${repo_url}.git" .
+        if [ $? -ne 0 ]; then
+            echo "Error: Failed to clone repository"
+            cd ..
+            rm -rf "$REPO_DIR"
+            return 1
+        fi
+        cd ..
+    elif [ -z "$(ls -A $REPO_DIR)" ]; then
+        echo "Repo directory is empty, cloning repository..."
+        cd "$REPO_DIR"
+        git clone "https://github.com/${repo_url}.git" .
+        if [ $? -ne 0 ]; then
+            echo "Error: Failed to clone repository"
+            cd ..
+            rm -rf "$REPO_DIR"
+            return 1
+        fi
+        cd ..
+    fi
+    
+    return 0
+}
+
+# Function to fetch JIRA ticket content
+fetch_jira_content() {
+    local jira_id=$1
+    
+    echo "Fetching JIRA ticket content for $jira_id..."
+    
+    # Load JIRA configuration
+    JIRA_TOKEN=$(grep "JIRA_TOKEN" "../$CONFIG_FILE" | cut -d'"' -f2)
+    JIRA_EMAIL=$(grep "JIRA_EMAIL" "../$CONFIG_FILE" | cut -d'"' -f2)
+    JIRA_SERVER=$(grep "JIRA_SERVER" "../$CONFIG_FILE" | cut -d'"' -f2)
+    
+    # Direct curl command to fetch JIRA content
+    echo "Executing curl command to fetch JIRA content..."
+    JIRA_RESPONSE=$(curl -s \
+        --request GET \
+        --url "${JIRA_SERVER}/rest/api/3/issue/$jira_id" \
+        --user "${JIRA_EMAIL}:${JIRA_TOKEN}" \
+        --header "Accept: application/json")
+    
+    # Check if the response contains an error
+    if [[ "$JIRA_RESPONSE" == *"errorMessages"* ]]; then
+        echo "Warning: JIRA API returned an error: $JIRA_RESPONSE"
+        echo "Creating placeholder content for JIRA ticket $jira_id"
+        # Create a placeholder JSON with minimal information
+        JIRA_RESPONSE="{\"key\":\"$jira_id\",\"fields\":{\"summary\":\"Placeholder for $jira_id\",\"description\":\"This is a placeholder for JIRA ticket $jira_id which could not be accessed via API.\"}}"
+    fi
+    
+    # Save the response to the issue_content.json file
+    echo "$JIRA_RESPONSE" > "../$ISSUE_CONTENT_FILE"
+    echo "JIRA ticket content saved to ../$ISSUE_CONTENT_FILE"
+}
+
+# Function to fetch GitHub issue content
+fetch_github_content() {
+    local ticket_url=$1
+    local repo=$(extract_github_repo "$ticket_url")
+    local issue_number=$(echo "$ticket_url" | grep -o '/issues/[0-9]*' | grep -o '[0-9]*')
+    
+    echo "Fetching GitHub issue #$issue_number from $repo..."
+    TICKET_CONTENT=$(gh issue view "$issue_number" -R "$repo" --json title,body,number,url,state,labels)
+    echo "$TICKET_CONTENT" > "../$ISSUE_CONTENT_FILE"
+    echo "GitHub issue content saved to ../$ISSUE_CONTENT_FILE"
+}
+
+# Function to run the task workflow
+run_task_workflow() {
+    # Check if we're on main branch and have no unstaged changes
+    CURRENT_BRANCH=$(git branch --show-current)
+    UNSTAGED_CHANGES=$(git status --porcelain)
+    
+    # Choose instruction file based on conditions
+    if [ "$CURRENT_BRANCH" = "main" ] && [ -z "$UNSTAGED_CHANGES" ]; then    
+        echo "Starting a brand new task!"
+        goose run -i "../instructions-starting.txt"
+        echo "Now will try to finish it to completion"
+    fi    
+    
+    # Keep running the iterating instructions until FINISHED file exists
+    while [ ! -f "../$FINISHED_FILE" ]; do
+        echo "Working the task..."
+        goose run -i "../instructions-iterating.txt"
+        # Add a small delay to prevent too rapid iterations
+        sleep 1
+    done
+    
+    echo "FINISHED file found, exiting..."
+}
+
+# Function to clean up resources
+cleanup() {
+    # Clean up issue content file
+    if [ -f "../$ISSUE_CONTENT_FILE" ]; then
+        echo "Cleaning up $ISSUE_CONTENT_FILE file..."
+        rm "../$ISSUE_CONTENT_FILE"
+    fi
+}
+
+# Main function
+main() {
+    # Check if issue URL is provided
+    if [ $# -eq 0 ]; then
+        echo "Please provide a GitHub issue URL or JIRA ticket URL"
+        echo "Usage: $0 <ticket-url> [--reset]"
+        echo "Examples:"
+        echo "  $0 https://github.com/owner/repo/issues/123"
+        echo "  $0 https://block.atlassian.net/browse/PROJECT-123"
+        echo ""
+        echo "For JIRA tickets, make sure you have a jira-config file with your JIRA credentials"
+        exit 1
+    fi
+    
+    TICKET_URL="$1"
+    RESET=false
+    
+    # Check for reset flag
+    if [ "$2" = "--reset" ]; then
+        RESET=true
+    fi
+    
+    echo "Running preflight checks..."
+    goose run --text "check that gh cli is available, if not suggest to install it. 'gh auth status' to check is ready to use"
+    
+    # Determine ticket type and get repository
+    if is_github_url "$TICKET_URL"; then
+        handle_github_issue "$TICKET_URL"
+        REPO_URL=$(extract_github_repo "$TICKET_URL")
+    elif is_jira_url "$TICKET_URL"; then
+        handle_jira_ticket "$TICKET_URL" || exit 1
+    else
+        echo "Error: Unrecognized ticket URL format"
+        exit 1
+    fi
+    
+    # Setup repository
+    setup_repository "$REPO_URL" "$RESET" || exit 1
+    
+    # Navigate to repo directory
+    cd "$REPO_DIR"
+    
+    # Export ticket information as environment variables
+    export TICKET_TYPE="$ISSUE_TYPE"
+    export TICKET_URL="$TICKET_URL"
+    
+    # Fetch and store ticket content
+    if [ "$ISSUE_TYPE" = "jira" ]; then
+        export JIRA_TICKET="$JIRA_ID"
+        fetch_jira_content "$JIRA_ID"
+    else
+        fetch_github_content "$TICKET_URL"
+    fi
+    
+    # Run the task workflow
+    run_task_workflow
+    
+    # Clean up resources
+    cleanup
+}
+
+# Execute the main function
+main "$@"
